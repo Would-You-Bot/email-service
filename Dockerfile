@@ -1,9 +1,7 @@
-FROM node:18-slim AS base
+FROM node:20-slim AS base
 
 # Update Corepack
 RUN corepack enable && npm i -g corepack@latest
-
-RUN corepack enable
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
