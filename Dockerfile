@@ -1,5 +1,7 @@
 # Base stage: set WORKDIR to /app so that all installations go there
 FROM node:20-slim AS base
+RUN apk add --no-cache openssl openssl-dev
+
 WORKDIR /app
 
 # Update Corepack
