@@ -13,11 +13,14 @@ COPY package*.json pnpm-lock*.yaml ./
 FROM base AS prod_dependencies
 RUN pnpm approve-builds
 RUN pnpm install --prod --frozen-lockfile
+RUN pnpm approve-builds
 
 #Create dist.
 FROM base AS builder
 COPY . .
+RUN pnpm approve-builds
 RUN pnpm install --frozen-lockfile
+RUN pnpm approve-builds
 RUN pnpm run build
 
 #Final image
