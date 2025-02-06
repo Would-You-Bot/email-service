@@ -1,6 +1,7 @@
 FROM node:18-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN apt-get update -y && apt-get install -y openssl
 #Hook into pnpm without installing pnpm. (magic) (https://nodejs.org/docs/latest-v18.x/api/corepack.html)
 # RUN corepack enable
 #Current fix for the corepack download issue
