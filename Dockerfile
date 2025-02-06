@@ -18,6 +18,7 @@ FROM base AS builder
 COPY . .
 RUN pnpm install --frozen-lockfile
 RUN pnpm run build
+RUN pnpm approve-builds
 
 #Final image
 FROM base
