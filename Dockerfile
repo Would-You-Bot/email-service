@@ -12,8 +12,7 @@ COPY package*.json pnpm-lock*.yaml ./
 
 #Create node_modules files without dev dependencies.
 FROM base AS prod_dependencies
-RUN pnpm install --prod --frozen-lockfile
-RUN pnpm dlx prisma generate
+RUN pnpm install --frozen-lockfile
 
 #Create dist.
 FROM base AS builder
