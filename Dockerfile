@@ -17,6 +17,7 @@ RUN pnpm install --prod --frozen-lockfile
 FROM base AS builder
 COPY . .
 RUN pnpm install --frozen-lockfile
+RUN pnpm dlx prisma generate
 RUN pnpm run build
 
 #Final image
