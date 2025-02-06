@@ -16,9 +16,9 @@ RUN pnpm install --prod --frozen-lockfile
 #Create dist.
 FROM base AS builder
 COPY . .
+RUN pnpm approve-builds
 RUN pnpm install --frozen-lockfile
 RUN pnpm run build
-RUN pnpm approve-builds
 
 #Final image
 FROM base
