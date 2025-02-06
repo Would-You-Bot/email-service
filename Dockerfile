@@ -1,6 +1,7 @@
 FROM node:18-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+
 RUN apt-get update -y && apt-get install -y openssl
 #Hook into pnpm without installing pnpm. (magic) (https://nodejs.org/docs/latest-v18.x/api/corepack.html)
 # RUN corepack enable
@@ -18,7 +19,6 @@ RUN pnpm install --prod --frozen-lockfile
 FROM base AS builder
 COPY . .
 RUN pnpm install --frozen-lockfile
-RUN pnpm dlx prisma generate
 RUN pnpm run build
 
 #Final image
@@ -28,4 +28,5 @@ ENV NODE_ENV=production
 WORKDIR /usr/src/app
 COPY --from=prod_dependencies /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/dist ./dist
+RUN pnpm dlx prisma generate
 CMD [ "pnpm", "run", "start" ]
