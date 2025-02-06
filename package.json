@@ -4,9 +4,10 @@
   "description": "Email microservice handling email deletion",
   "main": "dist/service.js",
   "scripts": {
-    "start": "node --enable-source-maps dist/service.js",
-    "dev": "tsc && node --enable-source-maps dist/service.js",
-    "build": "tsc"
+    "start": "node --enable-source-maps .",
+    "copy-files": "copyfiles -u 1 dist/",
+   "dev": "tsc && pnpm run copy-files && node --enable-source-maps .",
+    "build": "tsc && pnpm run copy-files"
   },
   "devDependencies": {
     "@types/node": "^22.13.1",
