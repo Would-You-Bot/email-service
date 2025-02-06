@@ -26,6 +26,6 @@
 		// This improves issue grouping in Sentry.
 		"sourceRoot": "/"
 	},
-	"include": ["src/**/*", "prisma/*"],
+	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]
 }
