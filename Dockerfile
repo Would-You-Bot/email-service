@@ -1,33 +1,30 @@
-FROM node:18-slim AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+# syntax=docker/dockerfile:1
 
-RUN apt-get update -y && apt-get install -y openssl
-#Hook into pnpm without installing pnpm. (magic) (https://nodejs.org/docs/latest-v18.x/api/corepack.html)
-# RUN corepack enable
-#Current fix for the corepack download issue
-RUN npm install -g pnpm 
-WORKDIR /usr/src/app
-COPY package*.json pnpm-lock*.yaml ./
+# Build the application from source
+FROM golang:1.23 AS build-stage
 
+WORKDIR /app
 
-#Create node_modules files without dev dependencies.
-FROM base AS prod_dependencies
-RUN pnpm install --prod --frozen-lockfile
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+RUN go mod download
 
-#Create dist.
-FROM base AS builder
-COPY . .
-RUN pnpm install --frozen-lockfile
-RUN pnpm dlx prisma generate
-RUN pnpm run build
+# Copy the rest of the application code, including your local module
+COPY . ./
 
-#Final image
-FROM base
-ENV NODE_ENV=production
+RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
 
-WORKDIR /usr/src/app
-COPY --from=prod_dependencies /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/dist ./dist
-RUN pnpm dlx prisma generate
-CMD [ "pnpm", "run", "start" ]
+# Run the tests in the container
+FROM build-stage AS run-test-stage
+RUN go test -v ./...
+
+# Deploy the application binary into a lean image
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
+
+WORKDIR /
+
+COPY --from=build-stage /docker-gs-ping /docker-gs-ping
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/docker-gs-ping"]
