@@ -6,10 +6,13 @@ import (
 
 	"github.com/Would-You-Bot/email-microservice/db"
 	"github.com/Would-You-Bot/email-microservice/tasks"
+	"github.com/Would-You-Bot/email-microservice/config"
 	"github.com/jasonlvhit/gocron"
 )
 
 func main() {
+	config.Parse()
+
 	if err := db.Init(); err != nil {
 		log.Fatalf("Error initializing database: %v", err)
 	}

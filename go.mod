@@ -3,6 +3,7 @@ module github.com/Would-You-Bot/email-microservice
 go 1.23
 
 require (
+	github.com/caarlos0/env/v10 v10.0.0
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/jasonlvhit/gocron v0.0.1
 )
